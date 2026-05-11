@@ -1,6 +1,7 @@
 package com.mywebapp.expensetracker.service;
 
 import com.mywebapp.expensetracker.entity.Transaction;
+import com.mywebapp.expensetracker.entity.TransactionType;
 import com.mywebapp.expensetracker.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +46,25 @@ public class TransactionService {
         existing.setDate(existing.getDate());
 
         transactionRepository.save(existing);
+    }
+
+    public double getTotalIncome() {
+        return transactionRepository.findAll()
+                .stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+    }
+
+    public double getTotalExpense() {
+        return transactionRepository.findAll()
+                .stream()
+                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+    }
+
+    public double getBalance() {
+        return getTotalIncome() - getTotalExpense();
     }
 }

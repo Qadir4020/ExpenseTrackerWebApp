@@ -18,6 +18,9 @@ public class Transaction {
 
     private LocalDate date;
 
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
     public Long getId() {
         return id;
     }
@@ -56,5 +59,13 @@ public class Transaction {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 }

@@ -1,6 +1,7 @@
 package com.mywebapp.expensetracker.controller;
 
 import com.mywebapp.expensetracker.entity.Transaction;
+import com.mywebapp.expensetracker.entity.TransactionType;
 import com.mywebapp.expensetracker.repository.TransactionRepository;
 import com.mywebapp.expensetracker.service.TransactionService;
 import org.springframework.stereotype.Controller;
@@ -21,8 +22,11 @@ public class TransactionController {
     @GetMapping("/")
     public String home(Model model) {
 
-        model.addAttribute("transactions",
-                transactionService.getAllTransactions());
+        model.addAttribute("transactions", transactionService.getAllTransactions());
+
+        model.addAttribute("income", transactionService.getTotalIncome());
+        model.addAttribute("expense", transactionService.getTotalExpense());
+        model.addAttribute("balance", transactionService.getBalance());
 
         return "index";
     }
@@ -31,13 +35,15 @@ public class TransactionController {
     public String addTransaction(
             @RequestParam String title,
             @RequestParam Double amount,
-            @RequestParam String category
+            @RequestParam String category,
+            @RequestParam TransactionType type
     ) {
 
         Transaction transaction = new Transaction();
         transaction.setTitle(title);
         transaction.setAmount(amount);
         transaction.setCategory(category);
+        transaction.setType(type);
         transaction.setDate(LocalDate.now());
 
         transactionService.addTransaction(transaction);
