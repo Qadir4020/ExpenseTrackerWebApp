@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Transaction</title>
+</head>
+<body>
+
+<h1>Edit Transaction</h1>
+
+<form action="/update" method="post">
+
+  <input type="hidden" name="id" th:value="${transaction.id}">
+
+  <input type="text" name="title" th:value="${transaction.title}" placeholder="Title">
+
+  <input type="number" name="amount" th:value="${transaction.amount}" placeholder="Amount">
+
+  <input type="text" name="category" th:value="${transaction.category}" placeholder="Category">
+
+  <button type="submit">Update</button>
+
+</form>
+
+</body>
+</html>
