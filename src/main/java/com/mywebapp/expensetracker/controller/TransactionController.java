@@ -1,13 +1,11 @@
 package com.mywebapp.expensetracker.controller;
 
 import com.mywebapp.expensetracker.entity.Transaction;
-import com.mywebapp.expensetracker.entity.TransactionType;
 import com.mywebapp.expensetracker.service.TransactionService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
