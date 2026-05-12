@@ -1,8 +1,35 @@
 HELP.md
+
+# Maven / Build
 target/
+build/
+out/
+*.class
+
+# Maven Wrapper
 .mvn/wrapper/maven-wrapper.jar
+
+# Keep nested target/build folders if needed
 !**/src/main/**/target/
 !**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Logs
+*.log
+logs/
+
+# Environment / Secrets
+.env
+.env.*
+*.env
+
+application-local.properties
+application-secret.properties
+
+# OS files
+.DS_Store
+Thumbs.db
 
 ### STS ###
 .apt_generated
@@ -14,7 +41,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
@@ -25,9 +52,6 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
