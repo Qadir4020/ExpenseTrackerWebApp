@@ -2,15 +2,16 @@ package com.mywebapp.expensetracker.controller;
 
 import com.mywebapp.expensetracker.entity.Transaction;
 import com.mywebapp.expensetracker.entity.TransactionType;
-import com.mywebapp.expensetracker.repository.TransactionRepository;
 import com.mywebapp.expensetracker.service.TransactionService;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Controller
+@RestController
+@RequestMapping("/api/transactions")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -19,61 +20,63 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
+    // GET ALL TRANSACTIONS + SUMMARY
+    @GetMapping
+    public Map<String, Object> home() {
 
-        model.addAttribute("transactions", transactionService.getAllTransactions());
+        Map<String, Object> response = new HashMap<>();
 
-        model.addAttribute("income", transactionService.getTotalIncome());
-        model.addAttribute("expense", transactionService.getTotalExpense());
-        model.addAttribute("balance", transactionService.getBalance());
+        response.put("transactions",
+                transactionService.getAllTransactions());
 
-        return "index";
+        response.put("income",
+                transactionService.getTotalIncome());
+
+        response.put("expense",
+                transactionService.getTotalExpense());
+
+        response.put("balance",
+                transactionService.getBalance());
+
+        return response;
     }
 
-    @PostMapping("/add")
-    public String addTransaction(
-            @RequestParam String title,
-            @RequestParam Double amount,
-            @RequestParam String category,
-            @RequestParam TransactionType type
+    // ADD TRANSACTION
+    @PostMapping
+    public Transaction addTransaction(
+            @RequestBody Transaction transaction
     ) {
 
-        Transaction transaction = new Transaction();
-        transaction.setTitle(title);
-        transaction.setAmount(amount);
-        transaction.setCategory(category);
-        transaction.setType(type);
         transaction.setDate(LocalDate.now());
 
-        transactionService.addTransaction(transaction);
-
-        return "redirect:/";
+        return transactionService.addTransaction(transaction);
     }
 
-    @GetMapping("/delete/{id}")
+    // DELETE TRANSACTION
+    @DeleteMapping("/{id}")
     public String deleteTransaction(@PathVariable Long id) {
+
         transactionService.deleteTransaction(id);
-        return "redirect:/";
+
+        return "Transaction deleted successfully";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id, Model model) {
+    // GET SINGLE TRANSACTION
+    @GetMapping("/{id}")
+    public Transaction getTransaction(@PathVariable Long id) {
 
-        Transaction transaction = transactionService.getById(id);
-
-        model.addAttribute("transaction", transaction);
-
-        return "edit";
+        return transactionService.getById(id);
     }
 
-    @PostMapping("/update")
-    public String updateTransaction(@ModelAttribute Transaction transaction) {
+    // UPDATE TRANSACTION
+    @PutMapping("/{id}")
+    public Transaction updateTransaction(
+            @PathVariable Long id,
+            @RequestBody Transaction updatedTransaction
+    ) {
 
-        transactionService.updateTransaction(transaction);
+        updatedTransaction.setId(id);
 
-        return "redirect:/";
+        return transactionService.updateTransaction(updatedTransaction);
     }
-
-
 }

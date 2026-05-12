@@ -16,39 +16,54 @@ public class TransactionService {
         this.transactionRepository = transactionRepository;
     }
 
+    // GET ALL
     public List<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
 
-    public void addTransaction(Transaction transaction) {
-        transactionRepository.save(transaction);
+    // CREATE
+    public Transaction addTransaction(Transaction transaction) {
+        return transactionRepository.save(transaction);
     }
 
+    // DELETE
     public void deleteTransaction(Long id) {
+
+        if (!transactionRepository.existsById(id)) {
+            throw new RuntimeException("Transaction not found");
+        }
+
         transactionRepository.deleteById(id);
     }
 
+    // GET ONE
     public Transaction getById(Long id) {
         return transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Transaction not found"));
     }
 
-    public void updateTransaction(Transaction updated) {
+    // UPDATE
+    public Transaction updateTransaction(Transaction updated) {
 
         Transaction existing = transactionRepository.findById(updated.getId())
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() ->
+                        new RuntimeException("Transaction not found"));
 
         existing.setTitle(updated.getTitle());
         existing.setAmount(updated.getAmount());
         existing.setCategory(updated.getCategory());
+        existing.setType(updated.getType());
 
-        // IMPORTANT: keep original date
+        // keep original date
         existing.setDate(existing.getDate());
 
-        transactionRepository.save(existing);
+        return transactionRepository.save(existing);
     }
 
+    // TOTAL INCOME
     public double getTotalIncome() {
+
         return transactionRepository.findAll()
                 .stream()
                 .filter(t -> t.getType() == TransactionType.INCOME)
@@ -56,7 +71,9 @@ public class TransactionService {
                 .sum();
     }
 
+    // TOTAL EXPENSE
     public double getTotalExpense() {
+
         return transactionRepository.findAll()
                 .stream()
                 .filter(t -> t.getType() == TransactionType.EXPENSE)
@@ -64,6 +81,7 @@ public class TransactionService {
                 .sum();
     }
 
+    // BALANCE
     public double getBalance() {
         return getTotalIncome() - getTotalExpense();
     }

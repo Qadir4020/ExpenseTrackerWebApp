@@ -1,6 +1,7 @@
 package com.mywebapp.expensetracker.entity;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -21,8 +22,7 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
-    public Long getId() {
-        return id;
+    public Long getId() {        return id;
     }
 
     public void setId(Long id) {
